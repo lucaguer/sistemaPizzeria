@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tituloPagina">Compras</title>
+    <link rel="icon" type="image/png" href="img/logoCajero.png">
+    
+    <link rel="stylesheet" href="bt/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="bt_icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="alertify/alertify.min.css">
+    <link rel="stylesheet" href="sweetalert2/sweetalert2.css">
+    <link rel="stylesheet" href="dt/datatables.min.css">
+
+    <script src="jquery/jquery.min.js"></script>
+    <script src="dt/datatables.min.js"></script>
+    <script src="bt/bootstrap.min.js"></script>
+    <script src="js/baseDatos.js"></script>
+    <script src="js/compras.js"></script>
+    <script src="alertify/alertify.min.js"></script>
+    <script src="sweetalert2/sweetalert2.js"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-100 fixed-top">
+        <div class="container-fluid">
+          <div class="container-fluid d-flex justify-content-between align-items-center">
+              <div>
+                  <a class="navbar-brand" href="#"><font face="SVTecno">Compras - </font><span id="usuarioLogeadoNavbar"></span></a>
+              </div>
+              <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+          </div>
+            
+          <div class="offcanvas offcanvas-end bg-100 offcanvas-tamaño" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title text-100" id="offcanvasDarkNavbarLabel"><font face="SVTecno">SVTecno</font></h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item m-3">
+                  <div class="container-fluid text-center rounded-5">
+                      <img class="border border-light rounded-5 p-2" data-bs-toggle="modal" data-bs-target="#modalVerPerfil" src="img/icono_usuario.png" alt="icono_usuario">
+                      <p class="text-100" id="nombreUsuario"></p>
+                  </div>                      
+                </li>
+                <li class="nav-item text-center m-1">
+                  <a class="nav-link fs-5" href="proveedores.html">Proveedores</a>
+                  <a class="nav-link fs-5" href="#" onclick="$('#modalInformeCompras').modal('show');">Informes de Compras</a>
+                  <a class="nav-link fs-5" href="#" onclick="volver()">Menu Principal</a>
+                </li>                                       
+              </ul>
+            </div>
+            <div class="offcanvas-bottom text-center m-5">
+              <button class="btn btn-dark text-white border border-light" onclick="cerrarSesion()">Cerrar Sesion</button>
+            </div>
+          </div>
+        </div>
+    </nav>
+  </header>
+
+  <main>
+    
+    <!-- Aqui se cargan los datos para la venta -->
+    <div class="mt-10 row mx-2 p-2 border border-primary rounded-4 bg-primary-300" >
+
+      <form id="formProveedor" class="d-flex row m-0 p-3" onsubmit="finalizarCompra(event);">
+        <div class="col-xl-6 d-flex justify-content-center">
+          <div class="col-6">
+            <div class="row my-2">
+              <div class="col-4 d-flex m-1">
+                <button class="col mx-1 btn btn-secondary" type="button" onclick="compraAnterior(1)"><i class="bi bi-caret-left-fill"></i></button>
+                <button class="col mx-1 btn btn-secondary" type="button" onclick="compraPosterior(1)"><i class="bi bi-caret-right-fill"></i></i></button>
+              </div>
+              <div class="col-7 d-flex m-1">
+                <button onclick="nuevo()" class="col mx-1 btn btn-secondary" type="button"><i class="bi bi-plus-circle-fill"></i></button>
+                <button id="btnGuardar" class="col mx-1 btn btn-success" type="submit"><i class="bi bi-floppy"></i></button>
+                <button id="btnAnular" class="col mx-1 btn btn-danger" onclick="anularCompra()" type="button" hidden><i class="bi bi-trash3-fill"></i></button>
+              </div>
+            </div>
+            <div class="row my-2">
+              <div class="col-sm-4 text-center">
+                  <div class="form-floating">
+                    <input type="text" name="" id="codCompra" class="form-control text-center" disabled>
+                      <label for="codCompra">Codigo</label>
+                  </div>
+              </div>
+              <div class="col-sm-8 text-center">
+                <div class="form-floating">
+                  <input type="date" name="" id="fechaComprobante" class="form-control text-center" required>
+                  <label for="fechaComprobante">Fecha del comprobante:</label>
+                </div>
+              </div>
+            </div>
+    
+            <div class="row my-1">
+              <div class="col">
+                  <div class="form-floating">
+                      <input type="number" onkeyup="buscarProveedor()" id="codProveedor" placeholder="" class="form-control text-center" pattern="[0-9]" required>
+                      <label for="codProveedor" class="">Proveedor (F1)</label>
+                  </div>
+              </div>
+            </div>
+            <div class="form-floating my-1">
+              <input type="text" class="form-control" id="rucProveedor" name="ruc" placeholder="Ingrese el RUC" pattern="[0-9]{5,8}-[0-9]{1}" disabled>
+              <label for="rucProveedor" class="">Ruc</label>
+            </div>
+            <div class="form-floating my-1">
+              <input type="text" name="" id="nomRazonProveedor" placeholder="" class="form-control" disabled>
+              <label for="nomRazonProveedor" class="">Nombre o Razon Social</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-6 d-flex justify-content-center align-items-center">
+          <div class="col-6">
+            <div class="text-center">
+              <div class="form-floating">
+                <select class="form-control text-center" name="" id="condiCompra">
+                  <option value="Contado" selected>Contado</option>
+                  <option value="Credito">Credito</option>
+                </select>
+                <label class="" for="condiCompra">Condicion</label>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="form-floating text-center">
+                <input class="form-control text-center" type="text" id="numTimbrado" placeholder="" required>
+                <label class="" for="numTimbrado">Timbrado</label>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="form-floating">
+                <input class="col form-control text-center" type="text" id="numFactura" placeholder="" pattern="[0-9]{3}-[0-9]{3}-[0-9]{7}" required>
+                <label for="numFactura">Numero de Factura</label><br>
+              </div>
+            </div>
+            <div class="text-center m-3">
+              <label id="usuarioCreacionCompra"></label>  
+              <label id="fechaCreacionCompra"></label>  
+            </div>          
+          </div>
+        </div>    
+
+      </form>
+      
+
+      <!-- Formulario para cargar artículos -->
+      <div class="container pt-2 mt-3 border border-dark border-1 rounded-4">
+        <div class="row">
+          <div class="col">                  
+            <form id="formCargarArticulo" onsubmit="cargarArticulo(event)">
+              <div class="row p-1">
+                <div class="form-group col-lg-2 text-center">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="codigoArticulo" oninput="buscarArticulo();" min="1" max="20" placeholder="" required>
+                    <label for="codigoArticulo">Codigo</label><br>
+                  </div>
+                </div>
+                <div class="form-group col-lg-4 text-center">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="nombreArticulo" placeholder="" disabled>
+                    <label for="nombreArticulo">Nombre de Producto</label><br>
+                  </div>
+                </div>
+                
+                <div class="form-group col-lg-2 text-center">
+                  <div class="form-floating">
+                    <input onkeyup="calcularTotal()" type="number" class="form-control text-end" id="cantidadArticulo" value="1" min="1" pattern="[0-9]" placeholder="" required>
+                    <label for="cantidadArticulo">Cantidad</label><br>
+                  </div>
+                </div>
+
+                <div class="form-group col-lg-2 text-center">
+                  <div class="form-floating">
+                    <input onkeyup="calcularTotal()" type="number" class="form-control text-end" id="precioUnitario" value="0" min="1" pattern="[0-9]" placeholder="" required>
+                    <label for="precioUnitario">Precio Unitario</label><br>
+                  </div>
+                </div>   
+
+                <div class="form-group col-lg-2 text-center">
+                  <div class="form-floating">
+                    <input type="text" class="form-control text-end" id="subTotal" max="999999999" placeholder="" disabled>
+                    <label for="subTotal">Total</label><br>
+                  </div>
+                </div>   
+
+              </div>
+              <div class="d-flex justify-content-center">
+                <button type="submit" id="agregarArticulo" class="btn btn-primary m-2" hidden>Agregar Artículo</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row mt-4 ">
+          <div class="col">
+              <table class="table table-responsive " id="tablaCargaArticulos">                    
+                  <thead id="tablaCargaHead" class="">
+                      <tr>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 5%;" >N°</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 35%;">Nombre del Producto</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Cantidad</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Precio</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Exentas</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">5%</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">10%</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Eliminar</th>
+                      </tr>
+                  </thead>
+                  <tbody id="tablaCargaBody">
+                  </tbody>
+                  <tfoot id="tablaCargaFoot">                    
+                  </tfoot>
+              </table>
+          </div>
+        </div>
+      </div>    
+    </div>
+
+
+    <!-- Modal para buscar Proveedores -->
+    <div class="modal fade" id="modalBuscarProveedores" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content  bg-primary-200">
+          <div class="modal-header d-flex text-center">
+            <h5 class="modal-title">LISTA DE PROVEEDORES</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="buscarProveedores" placeholder="Buscar Cliente">
+                  <label for="buscarProveedores">Buscar Proveedor</label>
+              </div>
+              <div class="table-responsive">
+                  <table id="tablaBuscarProveedores" class="table table-striped table-bordered w-100">
+                      <thead id="tablaBuscarProveedoresHead" class="border border-2">
+                          <tr class="text-center">
+                              <th hidden>fila</th>
+                              <th style="width: 5%;">ID</th>
+                              <th style="width: 25%;">Nombre Razon</th>
+                              <th style="width: 10%;">RUC</th>
+                              <th style="width: 30%;">Direccion</th>
+                              <th style="width: 10%;">Telefono</th>
+                              <th style="width: 20%;">Correo</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tablaBuscarProveedoresBody">                                
+                      </tbody>
+                  </table>
+              </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal para buscar Articulos -->
+    <div class="modal fade" id="modalBuscarArticulos" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content  bg-primary-200">
+          <div class="modal-header d-flex text-center">
+            <h5 class="modal-title">LISTA DE ARTICULOS</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="buscarArticulos" placeholder="Buscar Articulo">
+                  <label for="buscarArticulos">Buscar Articulo</label>
+              </div>
+              <div class="table-responsive">
+                  <table id="tablaBuscarArticulos" class="table table-striped table-bordered w-100">
+                      <thead id="tablaBuscarArticulosHead" class="border border-2">
+                          <tr class="text-center">
+                              <th hidden>fila</th>
+                              <th style="width: 5%;">ID</th>
+                              <th style="width: 25%;">Articulo</th>
+                              <th style="width: 30%;">Descripcion</th>
+                              <th style="width: 10%;">Categoria</th>
+                              <th style="width: 20%;">Proveedor</th>
+                              <th style="width: 10%;">Precio</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tablaBuscarArticulosBody">                                
+                      </tbody>
+                  </table>
+              </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal Informe de Compras -->
+    <div class="modal fade" id="modalInformeCompras" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content  bg-primary-100">
+          <div class="modal-header">
+            <div class="col text-center">
+              <h5 class="modal-title text-100">INFORME DE COMPRAS</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="col">
+                  <table id="tablaInformeCompras" class="table table-responsive">
+                      <thead id="tablaInformeComprasHead" class="">
+                          <tr class="">
+                            <th class="centered bg-primary-200 text-100 border" style="width: 5%;">N°</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 5%;">Cod</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 30%;">Proveedor</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 10%;">Fecha</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 10%;">N° Factura</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 10%;">Monto Total</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 10%;">Insersion</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 10%;">Usuario</th>
+                            <th class="centered bg-primary-200 text-100 border" style="width: 10%;">Accion</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tablaInformeComprasBody">                                
+                      </tbody>
+                      <tfoot id="tablaInformeComprasFoot">
+                      </tfoot>
+                  </table>
+              </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-dark text-light">
+
+    <!-- Modal donde se muestra el perfil -->
+    <div class="modal fade" id="modalVerPerfil" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content bg-primary-200 p-2"> 
+          <div class="container-fluid text-center">
+            <div>
+              <img class="border border-light rounded-5 p-2" src="img/icono_usuario.png" alt="icono_usuario">
+            </div>
+            <p class="text-100" id="nombreUsuario"></p>
+            <div class="">
+              <div class=" text-center">
+                <h5 class="mb-0 py-3">Información de Perfil</h5>
+                <label class="card-text"><font face="Franklin Gothic Medium">Nombre y Apellido:</font></label><br>
+                <label id="nombreApellidoPerfil" class="text-100"></label>
+                <label class="card-text"><font face="Franklin Gothic Medium">Correo Electrónico: </font></label><br>
+                <label id="correoPerfil" class="text-100"></label>
+                <label class="card-text"><font face="Franklin Gothic Medium">Número de Teléfono: </font></label><br>
+                <label id="telefonoPerfil" class="text-100"></label>
+              </div>    
+              <button onclick="editarUsuario()" type="button" class="btn btn-success mt-3">Editar</button>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para editar usuario -->
+    <div class="modal fade" id="modalEditarUsuario" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content bg-primary-200 p-2" style="min-width: 20rem;">      
+          <div class="modal-header">
+            <h5 class="modal-title text-100" id="labelAgregarModificar">Editar Usuario</h5>
+            <button type="button" class="btn-close cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">  
+            <form class="needs-validation" novalidate onsubmit="guardarEditUsuario(event);" id="formEditarUsuario">
+              <div class="container">
+                <div class="d-grid justify-content-center">
+                  <img src="img/icono_usuario.png" alt="usuario">
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6 text-center">
+                  <label for="nombreEditUsuario">Nombre</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" pattern="[A-Z ]*" minlength="1" maxlength="30" id="nombreEditUsuario" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con Mayusculas.
+                  </div>
+                </div>
+                <div class="col-sm-6 text-center">
+                  <label for="apellidoEditUsuario">Apellido</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" pattern="[A-Z ]*" minlength="1" maxlength="30" id="apellidoEditUsuario" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con Mayusculas.
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6 text-center">
+                  <label for="correoEditUsuario">Correo</label>
+                  <input class="form-control text-100 bg-primary-200" minlength="5" maxlength="40" type="text" name="" id="correoEditUsuario" >
+                </div>
+                <div class="col-sm-6 text-center">
+                  <label for="telefonoEditUsuario">telefono</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" id="telefonoEditUsuario" pattern="\d*" minlength="5" maxlength="15" placeholder="" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con Números.
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6 text-center">
+                  <label for="usuarioEditUsuario">Usuario</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" id="usuarioEditUsuario" pattern="[a-z0-9]*" minlength="3" maxlength="20" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con minusculas.
+                  </div>
+                </div>
+                <div class="col-sm-6 text-center">
+                  <label>contraseña</label><br>
+                  <button type="button" class="btn btn-success"  data-bs-toggle="collapse" data-bs-target="#cambiarContraseña" aria-expanded="false"><i class="bi bi-pencil-square"></i> Cambiar</button>
+                </div>
+              </div>
+              <div class="collapse" id="cambiarContraseña">
+                <div class="row justify-content-center">
+                  <div class="col-sm-12 text-center">
+                    <label for="usuarioEditUsuario">Contrseña Anterior</label>
+                    <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="contAnterior">
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12 text-center">
+                    <label for="usuarioEditUsuario">Nueva Contraseña</label>
+                    <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="nuevaCont">
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12 text-center">
+                    <label for="usuarioEditUsuario">Repetir Contraseña</label>
+                    <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="repetirNuevaCont">
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid text-center mt-5">
+                <button class="btn btn-success" type="submit"><i class="bi bi-floppy"></i> Guardar</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-square"></i> Cancelar</button>
+              </div>
+            </form>           
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal bg-dark" id="modalIniciarSesion" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-primary-200">                   
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

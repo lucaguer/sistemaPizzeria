@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Custom Style -->
+    
+    <link rel="stylesheet" href="bt/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilosFactura.css">
+    <link rel="stylesheet" href="bt_icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="alertify/alertify.min.css">
+    <link rel="stylesheet" href="sweetalert2/sweetalert2.css">
+    <link rel="stylesheet" href="dt/datatables.min.css">
+
+    <script src="jquery/jquery.min.js"></script>
+    <script src="dt/datatables.min.js"></script>
+    <script src="bt/bootstrap.min.js"></script>
+    <script src="js/baseDatos.js"></script>
+    <script src="js/factura.js"></script>
+    <script src="alertify/alertify.min.js"></script>
+    <script src="sweetalert2/sweetalert2.js"></script>
+
+
+    <title>Factura</title>
+</head>
+
+<body>
+    <div class="my-5" id="printt" size="A4">
+        <div class="p-3">
+            <section class="top-content bb d-flex border border-dark rounded-2">
+
+
+                <div class=" col-6 top-rigth d-grid text-center">
+                    <h2 class="mt-3">AJ Electrocell</h2>
+                    <span class="fs-7">Venta de Equipos de informatica y Accesorios</span>
+                    <span class="fs-7">Gran Higinio Morínigo</span>
+                    <span class="fs-7">C/Avenida José Sanchez Labrador</span>
+                    <span class="fs-7">Cuidad de Belén</span>
+                    <span class="fs-7">Telefono: (0972) 767-492 </span>
+                </div>
+                
+                <div class="col">
+                    <div class="logo">
+                        <img src="" alt="" class="img-fluid">
+                    </div>
+                    <div class="top-left fs-7">
+                        <div class="mb-3 text-end">
+                            <span id="fechaHoraImpresion"></span>
+                            <span id="usuarioImpresion"></span>
+                        </div>
+                        <div class="graphic-path">
+                            <p class="fs-3"><font face="SVTecno">SVTecno</font></p>
+                        </div>
+
+                        <div class="border border-dark rounded-2 p-1 my-2">
+                            <div class="row">
+                                    <div class="col">
+                                        <div class="position-relative fs-6">
+                                            <span>Timbrado: <span id="numerotimbrado"></span></span>
+                                        </div>
+                                        <div class="position-relative">
+                                            <p>Inicio Vigencia: <span id="iniVigencia"></span></span>
+                                        </div>
+                                        <div class="position-relative">
+                                            <span>Fin Vigencia: <span id="finVigencia"></span></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col text-center">
+                                        <div class="position-relative fs-6">
+                                            <span>Ruc: <span>80078946-6</span></span>
+                                        </div>
+                                        <div class="position-relative fs-5">
+                                            <p>FACTURA</span>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="position-relative text-center">
+                                <p class="fs-4">Factura N° <span class="fs-4" id="numFactSecundaria"></span></p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="store-user mt-2 border border-dark rounded-2">
+                <div class="col-12 d-flex mt-3">    
+                    <div class="col-8 fs-7">                        
+                        <div class="">
+                            <p>Fecha y hora de emision: <span id="fechaHora"></span></p>
+                        </div>
+                        <div class="">
+                            <p>RUC: <span id="rucCliente">44444401-7</span></p>
+                        </div>
+                        <div class="">
+                            <p>Nombre o Razon Social: <span id="nomRazonCliete"></span></p>
+                        </div>
+                        <div class="">
+                            <p>Cliente: <span id="codCliente"> </span> - <span id="nomCliente"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="col fs-7">
+                        <div class="">
+                            <p>Condicion Venta: <span id="condicionVenta">Contado</span></p>
+                        </div>
+                        <div class="">
+                            <p>Direccion: <span id="dirCliente"></span></p>
+                        </div>
+                        <div class="">
+                            <p>Telefono: <span id="telCliente"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            
+            <section class="product-area mt-4 border border-dark rounded-2 fs-7 p-1">
+                <table id="tablaDetalle" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <td>ARTICULO</td>
+                            <td>CANTIDAD</td>
+                            <td>IVA</td>
+                            <td>PRECIO</td>
+                            <td>TOTAL</td>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        
+                    </tbody>
+                </table>
+            </section>
+            
+            <section class="balance-info border border-dark rounded-2 my-1 p-1">
+                <div class="row">
+                    <div class="col-8">
+                        <p class="m-0 font-weight-bold"> Nota: </p>
+                        <p>No se aceptan devoluciones pasadas las 24h</p>
+                    </div>
+                    <div class="col-4">
+                        <table class="table border-0 table-hover">
+                            <tr>
+                                <td>Total Gravado:</td>
+                                <td id="totalGravado"></td>
+                            </tr>
+                            <tr>
+                                <td>IVA 5%</td>
+                                <td id="iva5"></td>
+                            </tr>
+                            <tr>
+                                <td>IVA 10%</td>
+                                <td id="iva10"></td>
+                            </tr>
+                            <tfoot>
+                                <tr>
+                                    <td>Sub Total:</td>
+                                    <td id="subTotal"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            
+        
+            <footer class="row w-100 text-center">
+                
+                <p class="text-center m-auto col-7">
+                    Vea esta factura en linea - <a href="#!"> svtecno/jjduusyeriaorqeoa265e </a>
+                </p>
+                <div class="social pt-3 m-auto">
+                    <span class="pr-2">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>0972 767 492</span>
+                    </span>
+                    <span class="pr-2">
+                        <i class="fas fa-envelope"></i>
+                        <span>svtecno@gmail.com</span>
+                    </span>
+                    <span class="pr-2">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>/svtecno.7264</span>
+                    </span>
+                    <span class="pr-2">
+                        <i class="fab fa-youtube"></i>
+                        <span>/svtecno</span>
+                    </span>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal que se muestra si aun no se inicio sesion -->
+    <div class="modal bg-dark" id="modalIniciarSesion" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content bg-primary-200">                   
+          </div>
+        </div>
+      </div>
+  
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tituloPagina">Ventas</title>
+    <link rel="icon" type="image/png" href="img/logoCajero.png">
+    
+    <link rel="stylesheet" href="bt/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="bt_icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="alertify/alertify.min.css">
+    <link rel="stylesheet" href="sweetalert2/sweetalert2.css">
+    <link rel="stylesheet" href="dt/datatables.min.css">
+
+    <script src="jquery/jquery.min.js"></script>
+    <script src="dt/datatables.min.js"></script>
+    <script src="bt/bootstrap.min.js"></script>
+    <script src="js/baseDatos.js"></script>
+    <script src="js/cajero.js"></script>
+    <script src="alertify/alertify.min.js"></script>
+    <script src="sweetalert2/sweetalert2.js"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-100 fixed-top">
+        <div class="container-fluid">
+          <div class="container-fluid d-flex justify-content-between align-items-center">
+              <div>
+                  <a class="navbar-brand" href="#"><font face="">Ventas - </font><span id="usuarioLogeadoNavbar"></span></a>
+              </div>
+              <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+          </div>
+            
+          <div class="offcanvas offcanvas-end bg-100 offcanvas-tamaño" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title text-100" id="offcanvasDarkNavbarLabel"><font face="">Tatakua Pizzas</font></h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item m-3">
+                  <div class="container-fluid text-center rounded-5">
+                      <img class="border border-light rounded-5 p-2" data-bs-toggle="modal" data-bs-target="#modalVerPerfil" src="img/icono_usuario.png" alt="icono_usuario">
+                      <p class="text-100" id="nombreUsuario"></p>
+                  </div>                      
+                </li>
+                <li class="nav-item text-center m-1">
+                  <a id="btnClientes" class="nav-link fs-5" href="clientes.html">Clientes</a>
+                  <a id="btnTipoValor" class="nav-link fs-5" href="#" onclick="mostrarTiposValor()" hidden>Tipos de Valor</a>
+                  <a id="btnMenuPrincipal" class="nav-link fs-5" href="#" onclick="volver()">Menu Principal</a>
+                </li>                                       
+              </ul>
+            </div>
+            <div class="offcanvas-bottom text-center m-5">
+              <button class="btn btn-dark text-white border border-light" onclick="cerrarSesion()">Cerrar Sesion</button>
+            </div>
+          </div>
+        </div>
+    </nav>
+  </header>
+
+  <main>
+    
+    <!-- Aqui se cargan los datos para la venta -->
+    <div class="mt-10 row mx-2 p-2 border border-primary rounded-4 bg-primary-300" >
+
+      <form id="formCliente" class="d-flex row m-0 p-3" onsubmit="finalizarVenta(event);">
+        <div class="col-4">
+          <div class="row my-2">
+            <div class="col-4 d-flex m-1">
+              <button class="col mx-1 btn btn-secondary" type="button" onclick="ventaAnterior(1)"><i class="bi bi-caret-left-fill"></i></button>
+              <button class="col mx-1 btn btn-secondary" type="button" onclick="ventaPosterior(1)"><i class="bi bi-caret-right-fill"></i></i></button>
+            </div>
+            <div class="col-7 d-flex m-1">
+              <button onclick="nuevo()" class="col mx-1 btn btn-secondary" type="button"><i class="bi bi-plus-circle-fill"></i></button>
+              <button id="btnGuardar" class="col mx-1 btn btn-success" type="submit"><i class="bi bi-floppy"></i></button>
+              <button id="btnAnular" class="col mx-1 btn btn-danger" onclick="anularVenta()" type="button" hidden><i class="bi bi-trash3-fill"></i></button>
+            </div>
+          </div>
+          <div class="row my-2">
+            <div class="col-xl-4 text-center">
+                <div class="form-floating">
+                  <input type="text" name="" id="codVenta" class="form-control text-center border-0" disabled>
+                  <label for="codVenta">Movimiento</label>
+                </div>
+            </div>
+            <div class="col-xl-8 text-center">
+              <div class="form-floating">
+                <input type="date" name="" id="fechaA" class="form-control text-center border-0" disabled>
+                <label for="fechaA">Fecha:</label>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row my-1">
+            <div class="col">
+                <div class="form-floating">
+                    <input type="number" onkeyup="buscarCliente()" id="codCliente" placeholder="" class="form-control text-center" pattern="[0-9]" required>
+                    <label for="codCliente" class="">Cliente (f1)</label>
+                </div>
+            </div>
+          </div>
+          <div class="form-floating my-1">
+            <input type="text" class="form-control" id="rucCliente" name="ruc" placeholder="Ingrese el RUC" pattern="[0-9]{5,8}-[0-9]{1}" required>
+            <div class="invalid-feedback">Por favor, ingrese un RUC válido.</div>
+            <label for="ruc" class="">Ruc</label>
+          </div>
+          <div class="form-floating my-1">
+            <input type="text" name="" id="nomRazonCliete" placeholder="" class="form-control">
+            <label for="nombre_razon" class="">Nombre o Razon Social</label>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="mx-5 my-2">
+            <div class="d-flex border border-black mb-3 justify-content-center rounded-3" style="min-width: 200px; max-height: 15rem;">
+              <img style="min-width: 100% ;" src="img/loginpizza.png" alt="">
+            </div>
+            <div class="d-grid justify-content-center">
+              <label class="fs-5">Condición de Venta</label>
+              <div class="mx-auto">
+                <div class="form-check mx-1">
+                  <input class="form-check-input" type="radio" name="opcion" id="contado" value="Contado" checked required>
+                  <label class="form-check-label" for="opcion1">Contado</label>
+                </div>
+                <div class="form-check mx-1">
+                    <input class="form-check-input" type="radio" name="opcion" id="credito" value="Credito">
+                    <label class="form-check-label" for="opcion2">Crédito</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mx-5 d-flex">
+                <div class="form-floating col-10 mx-2">
+                    <input type="number" class="form-control text-center" id="numPlanilla">
+                    <label for="numPlanilla">Planilla</label>
+                </div>
+                <div class="col">
+                  <button onclick="abrirPlanilla()" type="button" class="btn btn-success form-control h-100" id="btnNumPlanilla"> ... </button>
+                </div>
+          </div>
+          
+        </div>             
+        <div class="col-4">
+          <div class="row text-center mx-3 mt-2">
+            <label class="col mt-2">Timbrado</label>
+            <input class="col form-control text-center" type="text" id="numTimbrado">
+          </div>
+          <div class="row text-center mx-3 my-1">
+            <label class="col mt-2">Inicio Vigencia</label>
+            <input class="col form-control text-center" type="date" id="iniVigencia"  disabled>
+          </div>
+          <div class="row text-center mx-3 my-1">
+            <label class="col mt-2">Fin Vigencia</label>
+            <input class="col form-control text-center" type="date" id="finVigencia" disabled>
+          </div>
+          <div class="text-center mx-3">
+            <label for="numFactura" class="mt-2">Numero de Factura</label><br>
+            <label><font id="numFactura" size="5vw"></font></label>
+          </div>
+          <div class="text-center m-3">
+            <button onclick="informeVentas()" type="button" class="btn btn-secondary" > <i class="bi bi-file-text-fill"></i></i> Informe</button>
+          </div>
+          <div class="text-center m-3">
+            <label id="usuarioCreacionVenta"></label>  
+            <label id="fechaCreacionVenta"></label>  
+          </div>
+        </div>             
+      </form>
+      
+
+      <!-- Formulario para cargar artículos -->
+      <div class="container mt-3 border border-dark border-1 rounded-4">
+        <div class="row">
+          <div class="col">                  
+            <form id="formCargarArticulo" onsubmit="cargarArticulo(event)">
+              <div class="row p-1">
+
+                <div class="form-group col-1 p-1 text-center">
+                    <label class="label_cargar">Codigo</label><br>
+                    <input type="text" class="form-control" id="codigoArticulo" oninput="buscarArticulo();" required>
+                </div>
+
+                <div class="form-group col-5 p-1 text-center">
+                    <label class="label_cargar">Nombre de Producto</label><br>
+                    <input type="text" class="form-control" id="nombreArticulo" disabled>
+                </div>
+
+                <div class="form-group col-2 p-1 text-center">
+                      <label class="label_cargar">Cantidad</label><br>
+                      <input type="number" class="form-control text-end" id="cantidadArticulo" min="1" value="1" required>
+                </div>
+
+                <div class="form-group col-2 p-1 text-center">
+                      <label class="label_cargar">Precio Unitario</label><br>
+                      <input type="text" class="form-control text-end" id="precioUnitario" disabled>
+                </div>   
+
+                <div class="form-group col-2 p-1 text-center">
+                    <label class="label_cargar">Total</label><br>
+                    <input type="text" class="form-control text-end" id="subTotal" disabled>
+                </div>   
+
+              </div>
+              <div class="d-flex justify-content-center">
+              <button type="submit" id="agregarArticulo" class="btn btn-primary m-2" hidden>Agregar Artículo</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row mt-4 ">
+          <div class="col">
+              <table class="table table-responsive " id="tablaCargaArticulos">                    
+                  <thead id="tablaCargaHead" class="">
+                      <tr>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 5%;" >N°</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 35%;">Nombre del Producto</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Cantidad</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Precio</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Exentas</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">5%</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">10%</th>
+                          <th class="border border-2 border-black text-center fs-5" style="width: 10%;">Eliminar</th>
+                      </tr>
+                  </thead>
+                  <tbody id="tablaCargaBody">
+                  </tbody>
+                  <tfoot id="tablaCargaFoot">                    
+                  </tfoot>
+              </table>
+          </div>
+        </div>
+      </div>    
+    </div>
+
+
+    <!-- Modal para buscar cliente -->
+    <div class="modal fade" id="modalBuscarCliente" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content  bg-primary-200">
+          <div class="modal-header d-flex justify-content-center align-items-center">
+            <h5 class="modal-title">LISTA DE CLIENTES</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="buscarCliente" placeholder="Buscar Cliente">
+                  <label for="buscarCliente">Buscar Cliente</label>
+              </div>
+              <div class="table-responsive">
+                  <table id="tablabuscarClientes" class="table table-striped table-bordered w-100">
+                      <thead id="tablaBuscarClientesHead" class="border border-2">
+                          <tr class="text-center">
+                              <th hidden>fila</th>
+                              <th style="width: 5%;">ID</th>
+                              <th style="width: 20%;">Nombre</th>
+                              <th style="width: 20%;">Apellido</th>
+                              <th style="width: 10%;">CI</th>
+                              <th style="width: 15%;">RUC</th>
+                              <th style="width: 30%;">Nombre Razon</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tablaBuscarClientesBody">                                
+                      </tbody>
+                  </table>
+              </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal para planillas -->
+    <div class="modal fade" id="modalPlanillas" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-primary-200">
+          <div class="modal-header d-grid text-center">
+            <h5 class="modal-title text-100">PLANILLAS</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="d-flex justify-content-center">
+                <div class="col-md-2 mx-3">
+                  <input type="date" class="form-control" id="fechaInicio">
+                </div>
+                <div class="col-md-2 mx-3">
+                  <input type="date" class="form-control" id="fechaFin">
+                </div>
+                <div class="col-md-2 mx-3">
+                  <button onclick="tablaPlanillasFiltradaCargada()" class="btn btn-success form-control">Filtrar</button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                  <table id="tablaPlanillas" class="table table-striped table-bordered w-100">
+                      <thead id="tablaPlanillaHeader" class="border border-2">
+                          <tr class="text-center">
+                              <th hidden>fila</th>
+                              <th style="width: 5%;">ID</th>
+                              <th style="width: 10%;">Num Planilla</th>
+                              <th style="width: 15%;">Fecha Apertura</th>
+                              <th style="width: 15%;">Fecha Cierre</th>
+                              <th style="width: 15%;">Cajero</th>
+                              <th style="width: 20%;">Reapertura</th>
+                              <th style="width: 20%;">Accion</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tablaPlanillaBody">                                  
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="">
+            <div class="d-flex justify-content-center mb-3">
+              <div class="mx-3">
+                  <button onclick="nuevaPlanilla();" type="button" class="btn btn-primary" id="btnNuevo"><i class="bi bi-plus-square"></i> Nuevo</button>
+              </div>
+              <div class="mx-3">
+                  <button onclick="guardarPlanilla();" type="button" class="btn btn-success"> Guardar</button>
+              </div>
+            </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Informe de Ventas -->
+    <div class="modal fade" id="modalInformeVentas" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content  bg-primary-200">
+          <div class="modal-header">
+            <div class="col text-center">
+              <h5 class="modal-title text-100">INFORME DE VENTAS - PLANILLA N°: <span class="modal-title text-100" id="numPlanillaInforme"></span></h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="col">
+                  <table id="tablaInformeVentas" class="table table-responsive">
+                      <thead id="tablaInformeVentasHead" class="">
+                          <tr class="">
+                              <th style="width: 5%;">N°</th>
+                              <th style="width: 5%;">Cod</th>
+                              <th style="width: 30%;">Cliente</th>
+                              <th style="width: 10%;">Fecha</th>
+                              <th style="width: 10%;">Metodo Pago</th>
+                              <th style="width: 10%;">Total</th>
+                              <th style="width: 10%;">N° Factura</th>
+                              <th style="width: 10%;">Cajero</th>
+                              <th style="width: 10%;">Accion</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tablaInformeVentasBody">                                
+                      </tbody>
+                      <tfoot id="tablaInformeVentasFoot">
+                      </tfoot>
+                  </table>
+              </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Procesar Venta -->
+    <div class="modal" id="modalProcesarVenta" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content bg-primary-200"> 
+          <div class="modal-header d-grid text-center text-100">
+            <h5>Finalizar Venta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table id="tablaFinalizarVenta" class="table table-bordered">
+              <thead>
+                <tr class="border border-3 border-dark">
+                  <th style="width: 50%;" class="text-center">Monto Total</th>
+                  <th style="width: 40%;" class="text-end" colspan="2" id="montoTotalVenta"></th>
+                </tr>
+                <tr>
+                  <th class="text text-center">Metodo de pago</th>
+                  <th class="text text-center">Monto</th>
+                  <th class="text text-center">Añadir</th>
+                </tr>
+              </thead>
+              <tbody id="tablaFinalizarVentaBody">
+              </tbody>
+            </table>
+          </div>    
+          <div class="modal-footer justify-content-center">
+            <button class="btn btn-success" onclick="añadirFilaTipoValor()"><i class="bi bi-plus-circle-fill"> Añadir</i></button>
+            <button class="btn btn-success" onclick="procesarVenta()"><i class="bi bi-floppy"> Finalizar</i></button>
+          </div>              
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Modal Administrar tipos de valor -->
+    <div class="modal" id="modalTiposValor" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" style="min-width: 50rem;">
+        <div class="modal-content bg-primary-200"> 
+          <div class="modal-header d-grid text-center text-100">
+            <h5>Tipos de Valor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table id="tablaTiposValor" class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="text text-center col-2">ID</th>
+                  <th class="text text-center col-3">Tipo Valor</th>
+                  <th class="text text-center col-3">Insersion</th>
+                  <th class="text text-center col-2">Usuario</th>
+                  <th class="text text-center col-2">Accion</th>
+                </tr>
+              </thead>
+              <tbody id="tablaTiposValorBody">
+              </tbody>
+            </table>
+          </div>    
+          <div class="modal-footer justify-content-center">
+            <button id="btnGuardarTipoValor" class="btn btn-success" onclick="guardarTipoValor()" hidden><i class="bi bi-floppy"> Guardar</i></button>
+            <button id="btnNuevoTipoValor" class="btn btn-success" onclick="nuevaFilaTipoValor()"><i class="bi bi-plus-circle-fill"> Nuevo</i></button>
+            <button class="btn btn-secondary" onclick="cancelarNuevoTipoValor()"><i class="bi bi-floppy"> Cerrar</i></button>
+          </div>              
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-dark text-light">
+
+    <!-- Modal donde se muestra el perfil -->
+    <div class="modal fade" id="modalVerPerfil" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content bg-primary-200 p-2"> 
+          <div class="container-fluid text-center">
+            <div>
+              <img class="border border-light rounded-5 p-2" src="img/icono_usuario.png" alt="icono_usuario">
+            </div>
+            <p class="text-100" id="nombreUsuario"></p>
+            <div class="">
+              <div class=" text-center">
+                <h5 class="mb-0 py-3">Información de Perfil</h5>
+                <label class="card-text"><font face="Franklin Gothic Medium">Nombre y Apellido:</font></label><br>
+                <label id="nombreApellidoPerfil" class="text-100"></label>
+                <label class="card-text"><font face="Franklin Gothic Medium">Correo Electrónico: </font></label><br>
+                <label id="correoPerfil" class="text-100"></label>
+                <label class="card-text"><font face="Franklin Gothic Medium">Número de Teléfono: </font></label><br>
+                <label id="telefonoPerfil" class="text-100"></label>
+              </div>    
+              <button onclick="editarUsuario()" type="button" class="btn btn-success mt-3">Editar</button>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para editar usuario -->
+    <div class="modal fade" id="modalEditarUsuario" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content bg-primary-200 p-2" style="min-width: 20rem;">      
+          <div class="modal-header">
+            <h5 class="modal-title text-100" id="labelAgregarModificar">Editar Usuario</h5>
+            <button type="button" class="btn-close cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">  
+            <form class="needs-validation" novalidate onsubmit="guardarEditUsuario(event);" id="formEditarUsuario">
+              <div class="container">
+                <div class="d-grid justify-content-center">
+                  <img src="img/icono_usuario.png" alt="usuario">
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6 text-center">
+                  <label for="nombreEditUsuario">Nombre</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" pattern="[A-Z ]*" minlength="1" maxlength="30" id="nombreEditUsuario" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con Mayusculas.
+                  </div>
+                </div>
+                <div class="col-sm-6 text-center">
+                  <label for="apellidoEditUsuario">Apellido</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" pattern="[A-Z ]*" minlength="1" maxlength="30" id="apellidoEditUsuario" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con Mayusculas.
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6 text-center">
+                  <label for="correoEditUsuario">Correo</label>
+                  <input class="form-control text-100 bg-primary-200" minlength="5" maxlength="40" type="text" name="" id="correoEditUsuario" >
+                </div>
+                <div class="col-sm-6 text-center">
+                  <label for="telefonoEditUsuario">telefono</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" id="telefonoEditUsuario" pattern="\d*" minlength="5" maxlength="15" placeholder="" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con Números.
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-sm-6 text-center">
+                  <label for="usuarioEditUsuario">Usuario</label>
+                  <input class="form-control text-100 bg-primary-200" type="text" id="usuarioEditUsuario" pattern="[a-z0-9]*" minlength="3" maxlength="20" required>
+                  <div class="invalid-feedback text-danger bg-white rounded-2">
+                    Complete este campo con minusculas.
+                  </div>
+                </div>
+                <div class="col-sm-6 text-center">
+                  <label>contraseña</label><br>
+                  <button type="button" class="btn btn-success"  data-bs-toggle="collapse" data-bs-target="#cambiarContraseña" aria-expanded="false"><i class="bi bi-pencil-square"></i> Cambiar</button>
+                </div>
+              </div>
+              <div class="collapse" id="cambiarContraseña">
+                <div class="row justify-content-center">
+                  <div class="col-sm-12 text-center">
+                    <label for="usuarioEditUsuario">Contrseña Anterior</label>
+                    <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="contAnterior">
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12 text-center">
+                    <label for="usuarioEditUsuario">Nueva Contraseña</label>
+                    <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="nuevaCont">
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12 text-center">
+                    <label for="usuarioEditUsuario">Repetir Contraseña</label>
+                    <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="repetirNuevaCont">
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid text-center mt-5">
+                <button class="btn btn-success" type="submit"><i class="bi bi-floppy"></i> Guardar</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-square"></i>Cancelar</button>
+              </div>
+            </form>           
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal bg-dark" id="modalIniciarSesion" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-primary-200">                   
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesion</title>
+    <!-- icono de la pagina -->
+    <link rel="icon" href="img/logoLogin.png" type="image/png">
+    
+
+    <!-- librerias de estilos -->
+    <link rel="stylesheet" href="bt/bootstrap.min.css">
+    <link rel="stylesheet" href="bt_icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="sweetalert2/sweetalert2.css">
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <!-- funciones js -->
+    <script src="bt/bootstrap.min.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/baseDatos.js"></script>
+    <script src="sweetalert2/sweetalert2.js"></script>
+    
+</head>
+<body class="background_image">
+    
+    <!-- encabezado -->
+    <header>
+        <nav class="navbar navbar-dark bg-dark fixed-top">
+            <div class="container-fluid justify-content-center">
+              <a class="navbar-brand"><font face="Pizzas">Tatakua Pizzas</font></a>
+            </div>
+        </nav>
+    </header>  
+
+
+
+    <main>
+        <div class="container mt-5">
+            <div class="row justify-content-center ">
+                <div class="col-12 col-md-6 ">
+                    <div class="card mt-5 card_login ">
+                        <!-- la parte del encabezado del formulario -->
+                        <div class="container text-center">
+                            <img class="logoLogin" src="img/loginpizza.png" alt="">
+                        </div>
+                        <!-- titulo del formulario -->
+                        <div class="card-header fw-bold text-center display-5 text-white">
+                            Inicio de sesión
+                        </div>
+                        <!-- el cuerpo del formulario -->
+                        <div class="card-body">
+                            <form action="" class="needs-validation" novalidate onsubmit="return login(event);" autocomplete="off">
+                                <div class="input-group my-2">
+                                    <!-- ingresar usuario -->
+                                    <div class="form-floating ">
+                                        <input type="text" class="form-control input_login" id="usuario" autocomplete="" minlength="3" maxlength="20" placeholder="Usuario" required>
+                                        <label for="usuario" class="label_usuario text-dark bg-transparent" >Usuario</label>
+                                        <div class="invalid-feedback">
+                                            Por favor ingrese el usuario.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ingresar contraseña -->
+                                <div class="input-group my-2">
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control input_login" id="password" minlength="8" maxlength="20"  pattern="[A-Za-z0-9@$!%*?&]{8,}" placeholder="Contraseña" required>
+                                        <label for="password" class="label_password text-dark bg-transparent">Contraseña</label>
+                                        <div class="invalid-feedback">
+                                            Por favor ingrese la contraseña.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- el boton de ingresar -->
+                                <div class="row justify-content-around m-2 d-grid">
+                                    <button type="submit" class="btn btn-success botonLogin"><i class="bi bi-door-open-fill"></i> Ingresar</button>
+                                </div>
+                            </form>
+                            <!-- boton de restablecer, borrar base de datos y ver datos -->
+                            <div class="text-center mt-5">
+                                 <button class="btn btn-success btn-sm" title="Ver la base de datos" data-bs-toggle="modal" data-bs-target="#verBD" onclick="mostrarBD()"><i class="bi bi-eye"></i></button>
+                                    <button class="btn btn-primary btn-sm" title="Cargar la base de datos" onclick="restablecerBD()"><i class="bi bi-database-add"></i></button>
+                                    <button class="btn btn-danger btn-sm" title="Vaciar la base de datos" onclick="limpiarBD()"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+       <!-- Modal para mostrar datos -->
+    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataModalLabel">Datos de la Base de Datos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="dataTableContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+            
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            }, false)
+        })
+        })()
+    </script>
+</body>
+</html>

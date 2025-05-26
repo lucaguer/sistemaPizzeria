@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores</title>
+    <link rel="icon" type="image/png" href="">
+
+    <link rel="stylesheet" href="bt/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="bt_icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="alertify/alertify.min.css">
+    <link rel="stylesheet" href="sweetalert2/sweetalert2.css">
+    <link rel="stylesheet" href="dt/datatables.min.css">
+
+    <script src="jquery/jquery.min.js"></script>
+    <script src="bt/bootstrap.min.js"></script>
+    <script src="js/baseDatos.js"></script>
+    <script src="js/proveedores.js"></script>
+    <script src="alertify/alertify.min.js"></script>
+    <script src="sweetalert2/sweetalert2.js"></script>
+    <script src="dt/datatables.min.js"></script>
+    
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-100 fixed-top">
+            <div class="container-fluid">
+              <div class="container-fluid d-flex justify-content-between align-items-center">
+                  <div>
+                      <a class="navbar-brand" href="#"><font face="SVTecno">Proveedores - </font><span id="usuarioLogeadoNavbar"></span></a>
+                  </div>
+                  <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                  </button>
+              </div>
+                
+              <div class="offcanvas offcanvas-end bg-100 offcanvas-tamaño" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title text-100" id="offcanvasDarkNavbarLabel"><font face="SVTecno">SVTecno</font></h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item m-3">
+                      <div class="container-fluid text-center rounded-5">
+                          <img class="border border-light rounded-5 p-2" data-bs-toggle="modal" data-bs-target="#modalVerPerfil" src="img/icono_usuario.png" alt="icono_usuario">
+                          <p class="text-100" id="nombreUsuario"></p>
+                      </div>                      
+                    </li>
+                    <li class="nav-item text-center m-1">
+                      <a class="nav-link text-white fs-5" onclick="volver()">Menu Principal</a>
+                    </li>                     
+                  </ul>
+                </div>
+                <div class="offcanvas-bottom text-center m-5">
+                  <button class="btn btn-dark text-white border border-light" onclick="cerrarSesion()">Cerrar Sesion</button>
+                </div>
+              </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+         <!-- Parte donde se muestran los Proveedores cargados -->
+        <div class="container-fuid mt-10">        
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="card">
+                        <div class="card-header bg-primary-100 text-center">
+                            <h3 class="fon-zise-adaptable-5 text-200"><font face="SVTecno">PROVEEDORES</font></h3>
+                        </div>
+                        <div class="card-body bg-acent-100">
+                            <div class="table-responsive">
+                                <table id="tablaProveedores" class="table ">
+                                    <thead id="tablaProveedoresHead" class="border border-2">
+                                        <tr class="text-center">
+                                            <th class="centered border bg-primary-200 text-white" style="width: 5% !important;">ID</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 20% !important;">RAZON SOCIAL</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 10% !important;">RUC</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 20% !important;">DIRECCION</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 10% !important;">TELEFONO</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 15% !important;">CORREO</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 10% !important;">ESTADO</th>
+                                            <th class="centered border bg-primary-200 text-white" style="width: 10% !important;">ACCION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaProveedoresBody">                                
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="mx-3">
+                                    <button onclick="agregarProveedor();" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProveedores" id="btnNuevo"><i class="bi bi-plus-square"></i> Nuevo</button>
+                                </div>
+                                <div class="mx-3">
+                                    <button onclick="volver()" type="button" class="btn btn-secondary"><i class="bi bi-x-square"></i> Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Modal Agregar Modificar Proveedor -->
+        <div class="modal fade" id="modalProveedores" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabe" aria-hidden="true">
+            <div class="modal-dialog fixed-top ">
+                <div class="modal-content bg-200 rounded-4" style="min-width: 30rem;">
+                    <div class="modal-header bg-100 rounded-top-4">
+                        <h5 class="modal-title text-100" id="labelAgregarModificar">PROVEEDORES</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body bg-200 rounded-bottom-4">
+                        <form class="needs-validation" id="formProveedores" novalidate onsubmit="guardarProveedor(event)">
+                            <div class="row">
+            
+                                <div class="row">
+                                    <div class="col-sm-3 text-100 text-center">
+                                        <label class="" for="codProveedor">Codigo</label>
+                                        <input type="text" class="form-control text-center" id="codProveedor" placeholder="" disabled required>
+                                    </div>
+                                    <div class="col-sm-9 text-100 text-center">
+                                        <label class="" for="nomProveedor">Nombre</label>
+                                        <input type="text" class="form-control text-uppercase" id="nomProveedor" name="nombre" placeholder="" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 text-100 text-center">
+                                        <label class="" for="rucProveedor">RUC</label>
+                                        <input type="text" class="form-control text-end" id="rucProveedor" pattern="[0-9]{5,8}-[0-9]{1}" required>
+                                    </div> 
+                                    <div class="col-sm-6 text-100 text-center">
+                                        <label class="" for="telProveedor">Telefono</label>
+                                        <input type="text" class="form-control text-end" id="telProveedor" placeholder="" required>
+                                    </div> 
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 text-100 text-center">
+                                        <label class="" for="dirProveedor">Direccion</label>
+                                        <input type="text" class="form-control" id="dirProveedor" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8 text-100 text-center">
+                                        <label class="" for="correoProveedor">Correo</label>
+                                        <input type="text" class="form-control text-center text-lowercase" id="correoProveedor">
+                                    </div>
+                                    <div class="col-sm-4 text-100 text-center">
+                                        <label class="" for="estadoProveedor">Estado</label>
+                                        <select class="form-control text-center" id="estadoProveedor" required>
+                                            <option value="Activo" selected>Activo</option>
+                                            <option value="Inactivo">Inactivo</option>
+                                        </select>
+                                    </div> 
+                                </div> 
+                                <div class="row text-center mt-3">
+                                    <div class="col-6 text-100">
+                                        <label>Insersion</label><br>
+                                        <label id="fechaCProveedor" class="fs-7"></label><br>
+                                        <label id="usuarioCProveedor" class="fs-7"></label>
+                                    </div>   
+                                    <div class="col-6 text-100">
+                                        <label>Modificacion</label><br>
+                                        <label id="fechaMProveedor" class="fs-7"></label><br>
+                                        <label id="usuarioMProveedor" class="fs-7"></label>
+                                    </div>
+                                </div>     
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary mx-2">Guardar</button>
+                                <button type="button" class="btn btn-secondary mx-2" onclick="cancelarAgregarProveedor()">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-light">
+
+      <!-- Modal donde se muestra el perfil -->
+      <div class="modal fade" id="modalVerPerfil" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content bg-primary-200 p-2"> 
+            <div class="container-fluid text-center">
+              <div>
+                <img class="border border-light rounded-5 p-2" src="img/icono_usuario.png" alt="icono_usuario">
+              </div>
+              <p class="text-100" id="nombreUsuario"></p>
+              <div class="">
+                <div class=" text-center">
+                  <h5 class="mb-0 py-3">Información de Perfil</h5>
+                  <label class="card-text"><font face="Franklin Gothic Medium">Nombre y Apellido:</font></label><br>
+                  <label id="nombreApellidoPerfil" class="text-100"></label>
+                  <label class="card-text"><font face="Franklin Gothic Medium">Correo Electrónico: </font></label><br>
+                  <label id="correoPerfil" class="text-100"></label>
+                  <label class="card-text"><font face="Franklin Gothic Medium">Número de Teléfono: </font></label><br>
+                  <label id="telefonoPerfil" class="text-100"></label>
+                </div>    
+                <button onclick="editarUsuario()" type="button" class="btn btn-success mt-3">Editar</button>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal para editar usuario -->
+      <div class="modal fade" id="modalEditarUsuario" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content bg-primary-200 p-2" style="min-width: 20rem;">      
+            <div class="modal-header">
+              <h5 class="modal-title text-100" id="labelAgregarModificar">Editar Usuario</h5>
+              <button type="button" class="btn-close cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">  
+              <form class="needs-validation" novalidate onsubmit="guardarEditUsuario(event);" id="formEditarUsuario">
+                <div class="container">
+                  <div class="d-grid justify-content-center">
+                    <img src="img/icono_usuario.png" alt="usuario">
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-6 text-center">
+                    <label for="nombreEditUsuario">Nombre</label>
+                    <input class="form-control text-100 bg-primary-200" type="text" pattern="[A-Z ]*" minlength="1" maxlength="30" id="nombreEditUsuario" required>
+                    <div class="invalid-feedback text-danger bg-white rounded-2">
+                      Complete este campo con Mayusculas.
+                    </div>
+                  </div>
+                  <div class="col-sm-6 text-center">
+                    <label for="apellidoEditUsuario">Apellido</label>
+                    <input class="form-control text-100 bg-primary-200" type="text" pattern="[A-Z ]*" minlength="1" maxlength="30" id="apellidoEditUsuario" required>
+                    <div class="invalid-feedback text-danger bg-white rounded-2">
+                      Complete este campo con Mayusculas.
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-6 text-center">
+                    <label for="correoEditUsuario">Correo</label>
+                    <input class="form-control text-100 bg-primary-200" minlength="5" maxlength="40" type="text" name="" id="correoEditUsuario" >
+                  </div>
+                  <div class="col-sm-6 text-center">
+                    <label for="telefonoEditUsuario">telefono</label>
+                    <input class="form-control text-100 bg-primary-200" type="text" id="telefonoEditUsuario" pattern="\d*" minlength="5" maxlength="15" placeholder="" required>
+                    <div class="invalid-feedback text-danger bg-white rounded-2">
+                      Complete este campo con Números.
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-6 text-center">
+                    <label for="usuarioEditUsuario">Usuario</label>
+                    <input class="form-control text-100 bg-primary-200" type="text" id="usuarioEditUsuario" pattern="[a-z0-9]*" minlength="3" maxlength="20" required>
+                    <div class="invalid-feedback text-danger bg-white rounded-2">
+                      Complete este campo con minusculas.
+                    </div>
+                  </div>
+                  <div class="col-sm-6 text-center">
+                    <label>contraseña</label><br>
+                    <button type="button" class="btn btn-success"  data-bs-toggle="collapse" data-bs-target="#cambiarContraseña" aria-expanded="false"><i class="bi bi-pencil-square"></i> Cambiar</button>
+                  </div>
+                </div>
+                <div class="collapse" id="cambiarContraseña">
+                  <div class="row justify-content-center">
+                    <div class="col-sm-12 text-center">
+                      <label for="usuarioEditUsuario">Contrseña Anterior</label>
+                      <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="contAnterior">
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    <div class="col-sm-12 text-center">
+                      <label for="usuarioEditUsuario">Nueva Contraseña</label>
+                      <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="nuevaCont">
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    <div class="col-sm-12 text-center">
+                      <label for="usuarioEditUsuario">Repetir Contraseña</label>
+                      <input class="form-control text-100 bg-primary-200" type="password" minlength="3" maxlength="20" id="repetirNuevaCont">
+                    </div>
+                  </div>
+                </div>
+                <div class="container-fluid text-center mt-5">
+                  <button class="btn btn-success" type="submit"><i class="bi bi-floppy"></i> Guardar</button>
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-square"></i> Cancelar</button>
+                </div>
+              </form>           
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal bg-dark" id="modalIniciarSesion" data-bs-backdrop="top" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content bg-primary-200">                   
+          </div>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>
+
+
+
+
+
+

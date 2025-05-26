@@ -1,0 +1,291 @@
+:root{
+    --primary-100:#1F3A5F;
+    --primary-200:#4d648d;
+    --primary-300:#acc2ef;
+    --accent-100:#3D5A80;
+    --accent-200:#cee8ff;
+    --text-100:#FFFFFF;
+    --text-200:#e0e0e0;
+    --bg-100:#0F1C2E;
+    --bg-200:#1f2b3e;
+    --bg-300:#374357;
+      
+}
+.bg-primary-100{background-color: var(--primary-100) !important}
+.bg-primary-200{background-color: var(--primary-200) !important}
+.bg-primary-300{background-color: var(--primary-300) !important}
+.bg-acent-100{background-color: var(--accent-100) !important}
+.bg-acent-200{background-color: var(--accent-200) !important}
+.bg-acent-300{background-color: var(--accent-300) !important}
+.bg-100{background-color: var(--bg-100) !important}
+.bg-200{background-color: var(--bg-200) !important}
+.bg-300{background-color: var(--bg-300) !important}
+.text-primary-100{color: var(--primary-100) !important}
+.text-primary-200{color: var(--primary-200) !important}
+.text-primary-300{color: var(--primary-300) !important}
+.text-100{color: var(--text-100) !important}
+.text-200{color: var(--text-200) !important}
+
+/* Estilos de Sweetalert */
+.swal2-popup {
+    color: var(--text-100);
+    background-color: var(--primary-100); /* Cambia el color de fondo según tu preferencia */
+    columns: var(--text-100);
+}
+.swal2-title {
+    color: var(--text-100); /* Cambia el color del contenido según tu preferencia */
+}
+
+.swal2-select-container {
+    background-color: #3D5A80 !important; /* Fondo blanco para el contenedor del select */
+    color: #000000 !important; /* Texto negro para el select */
+    border-radius: 4px !important;
+}
+.swal2-select {
+    background-color: #3D5A80 !important;
+    color: #000000 !important;
+    border: 1px solid #ced4da !important; /* Borde similar a Bootstrap */
+    padding: 5px !important;
+    width: 85% !important;
+}
+.swal2-select option {
+    background-color: #3D5A80 !important;
+    color: #000000 !important;
+}
+
+/* datatables estilos */
+.dataTables_wrapper {
+    color: #fff; /* Cambia el color del texto a blanco */
+    padding: 10px; /* Ajusta el espaciado interno */
+    border-radius: 5px; /* Agrega bordes redondeados */
+}
+
+
+
+
+body{
+    background-color: rgb(19, 39, 61); 
+    display: grid;
+    min-height: 100%;
+    min-width: 100%;
+}
+/* estilos de login */
+
+.background_imageMStock{
+    background-image: url('../img/fondoMenuStock.jpg');
+    background-size: auto;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.background-1{
+    background-image: url('../img/fondoMantenimientoArticulos.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.background_imageCajero{
+    background-image: url('../img/fondoCajero.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+
+
+.titulo-cabecera{
+    position: absolute;
+    font-size: clamp(30px, 2vw, 50px);
+    left: 45vw;
+    bottom: 5%;
+}
+
+
+
+.input_login{
+    background-color: #3D5A80;
+    
+}
+
+/* lo que hace cuando el cursos pasa sobre el objeto */
+.input_login:hover{
+    background-color: rgb(255, 255, 255);
+    
+}
+
+.logoLogin{
+    position: sticky;
+    min-width: 50%;
+    width: 50%;
+}
+
+.botonLogin:hover {
+    box-shadow: 0px 2px 10px white;
+    animation: bounce 1s infinite;
+}
+
+/* la animacion del boton login */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-20px);
+    }
+    60% {
+      transform: translateY(-10px);
+    }
+  }
+  
+
+/* la animacion al pasar el cursor sobre el logo */
+.logoLogin:hover{
+    animation: escala 1s infinite;
+}
+
+/* la animacion que modifica la escala */
+@keyframes escala {
+    0% { transform: scale(1.025); }
+    100% { transform: scale(1); }
+  }
+  
+
+.card_login{
+    background-color: rgba(0, 0, 0, 0.281);
+    transition: border-color 0.3s;
+    border: 2px transparent solid;
+}
+/* animacion de color del borde de la tarjeta login */
+.card_login:hover {
+    animation: borderAnimation 5s infinite; /* Aplica la animación al pasar el mouse sobre el contenedor */
+  }
+  /* animacion de color para el borde del login */
+  @keyframes borderAnimation {
+    0% {
+      border-color: rgb(255, 0, 0); /* Color inicial del borde (rojo) */
+    }
+    25% {
+      border-color: rgb(0, 255, 0); /* Color intermedio del borde (verde) */
+    }
+    50% {
+      border-color: rgb(0, 0, 255); /* Color intermedio del borde (azul) */
+    }
+    75% {
+      border-color: rgb(255, 255, 0); /* Color intermedio del borde (amarillo) */
+    }
+    100% {
+      border-color: rgb(255, 0, 255); /* Color final del borde (rosa) */
+    }
+  }
+
+
+
+
+
+
+
+/* Parte de mantenimiento de articulos */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.img-adaptable{
+    width: clamp(100px, 10rem, 300px);
+    height: clamp(50px, 10rem, 300px);
+}
+
+.alinear_derecha{
+    justify-content: end;
+}
+
+.mt-10{
+    margin-top: 100px;
+}
+
+.border-0{
+    border: solid 5px black;
+}
+
+.width-100{
+    justify-content: c;
+}
+
+/*Ventana cajero*/
+.label_cargar{
+    font-size: clamp(12px, 1.1vw, 18px);
+}
+
+.col-md-1-5{
+    flex:0 0 auto;
+    width:12.33333333%;
+}
+
+.modal-dialog-ampliado {
+    min-width: 50%;
+}
+
+.mt-10{
+    margin-top: 100px;
+}
+
+.centered{
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.mt-10{
+    margin-top: 100px;
+}
+
+.centered{
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.textAdaptable{
+    font-size: clamp(5px, 2vw, 20px);
+}
+
+.centered{
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+
+
+/* Estilos de Caja */
+
+
+.seleccionarFilaCliente{
+    cursor: pointer;
+}
+
+
+.offcanvas-tamaño{
+    max-width: 30rem;
+    min-width: 15rem;
+}
+
+
+
+
+
+
+
+.filaSeleccionada :hover{
+    scale: 1.025;
+}

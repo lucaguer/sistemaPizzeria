@@ -1,0 +1,13 @@
+Administrador
+lucaguer
+1234
+
+
+Cajero
+larreajose
+123
+
+
+Stock
+dlesme
+123
